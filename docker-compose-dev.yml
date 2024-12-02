@@ -1,0 +1,45 @@
+services:
+  # Redis Service
+  redis:
+    image: redis:latest
+    container_name: redis
+    ports:
+      - "6379:6379"  # Port mặc định của Redis
+    networks:
+      - ecommerce-network
+
+  # Elasticsearch Service
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.7.0
+    container_name: elasticsearch
+    environment:
+      - discovery.type=single-node
+    ports:
+      - "9200:9200"  # Port mặc định của Elasticsearch
+    networks:
+      - ecommerce-network
+
+  # Cassandra Service
+  cassandra:
+    image: cassandra:latest
+    container_name: cassandra
+    environment:
+      - CASSANDRA_START_RPC=true  
+      - CASSANDRA_CLUSTER_NAME=EcommerceCluster
+      - CASSANDRA_LISTEN_ADDRESS=cassandra
+      - CASSANDRA_RPC_ADDRESS=0.0.0.0
+      - CASSANDRA_ENDPOINT_SNITCH=GossipingPropertyFileSnitch
+    ports:
+      - "9042:9042"  # Port mặc định của Cassandra (CQL)
+    networks:
+      - ecommerce-network
+    volumes:
+      - cassandra-data:/var/lib/cassandra  # Persistent data storage
+
+networks:
+  ecommerce-network:
+    driver: bridge
+
+volumes:
+  cassandra-data:
+    driver: local

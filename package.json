@@ -1,0 +1,9 @@
+{
+  "dependencies": {
+    "@elastic/elasticsearch": "^8.16.2",
+    "@nestjs/elasticsearch": "^10.0.2",
+    "cassandra": "^0.1.0",
+    "cassandra-driver": "^4.7.2",
+    "nestjs-cassandra": "^1.0.5"
+  }
+}
