@@ -6,8 +6,7 @@ export class CassandraService implements OnModuleInit{
    
     async onModuleInit(){
         this.client = new Client({
-            contactPoints: ['cassandra'],
-            keyspace: 'shopify_ecommerce_platform_user_service_db',
+            contactPoints: ['127.0.0.1'],
             localDataCenter: 'datacenter1',
             authProvider: new auth.PlainTextAuthProvider('cassandra', 'cassandra')
         });
@@ -23,9 +22,14 @@ export class CassandraService implements OnModuleInit{
     }
     async createKeySpaceIfNotExists(){
         const keySpaceQuery = `CREATE KEYSPACE IF NOT EXISTS shopify_ecommerce_platform_user_service_db WITH 
-        replication = {'class:' 'SimpleStrategy', 'replication_factor': 3};
+        replication = {'class': 'SimpleStrategy', 'replication_factor': 3};
         `
-        await this.client.execute(keySpaceQuery);
+        try {
+            await this.client.execute(keySpaceQuery);
+        } catch (error) {
+            console.error('ERROR CREATING KEYSPACE', error);
+            throw error; // Ném lỗi chính xác
+        }
     }
 
     async executeQuery(query:string, params:any[]){
@@ -34,7 +38,7 @@ export class CassandraService implements OnModuleInit{
             return outcome.rows;
         }catch(error: any){
             console.error('ERROR EXECUTING CQL', error);
-            throw  new error;
+            throw error;
         }
     }
 
