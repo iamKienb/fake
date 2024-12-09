@@ -1,18 +1,17 @@
 import { Module } from "@nestjs/common";
 
 import { ConfigModule } from "@nestjs/config";
+import { CassandraModule } from "./infra/modules/cassandra/cassandra.module";
 
-import { UsersModule } from "./users/users.module";
-import { ElasticsearchModule } from "./common/elasticsearch/elasticsearch.module";
-import { RedisModule } from "./common/redis/redis.module";
-import { CassandraModule } from "./common/cassandra/cassandra.module";
+import { ElasticsearchModule } from "./infra/modules/elasticsearch/elasticsearch.module";
+import { RedisModule } from "./infra/modules/redis/redis.module";
+
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
     }),
-    UsersModule,
     ElasticsearchModule,
     RedisModule,
     CassandraModule
